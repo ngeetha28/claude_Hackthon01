@@ -1,0 +1,39 @@
+<template>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">{resource.Name}</h3>
+            <button class="edit-btn" onclick={toggleEdit}>Edit</button>
+        </div>
+        <p class="card-desc">{resource.Description__c}</p>
+        <div class="topics">
+            <template for:each={topicList} for:item="t">
+                <span key={t} class="topic-badge">{t}</span>
+            </template>
+        </div>
+        <div class="card-footer">
+            <a href={resource.Link__c} target="_blank" class="visit-link">Visit →</a>
+            <template if:true={resource.Email__c}>
+                <span class="email-text">{resource.Email__c}</span>
+            </template>
+        </div>
+
+        <template if:true={showEdit}>
+            <div class="edit-panel">
+                <template if:true={sent}>
+                    <p class="sent-msg">✓ Verification email sent. Check your inbox.</p>
+                </template>
+                <template if:false={sent}>
+                    <p class="edit-hint">To suggest an update, verify your email matches the company domain.</p>
+                    <lightning-input type="email" label="Your Email" value={email} onchange={handleEmailChange} class="edit-input"></lightning-input>
+                    <lightning-input type="text" label="Company Domain (e.g. company.com)" value={domain} onchange={handleDomainChange} class="edit-input"></lightning-input>
+                    <template if:true={errorMsg}>
+                        <p class="error-msg">{errorMsg}</p>
+                    </template>
+                    <button class="verify-btn" onclick={sendVerification} disabled={isSending}>
+                        {sendLabel}
+                    </button>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

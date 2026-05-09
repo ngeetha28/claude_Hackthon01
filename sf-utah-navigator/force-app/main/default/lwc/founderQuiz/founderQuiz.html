@@ -1,0 +1,64 @@
+<template>
+    <div class="quiz-container">
+        <!-- Progress bar -->
+        <div class="progress-bar">
+            <template for:each={steps} for:item="s">
+                <div key={s.index} class={s.cls}></div>
+            </template>
+        </div>
+        <p class="step-label">Step {currentStep} of 4</p>
+
+        <!-- Step 1: Stage -->
+        <template if:true={isStep1}>
+            <h2 class="quiz-title">What stage is your business?</h2>
+            <p class="quiz-sub">We&apos;ll match you with the most relevant resources.</p>
+            <div class="options-list">
+                <template for:each={stages} for:item="s">
+                    <button key={s.value} data-value={s.value} data-field="stage" onclick={handleSelect} class="option-btn">
+                        <span class="option-label">{s.label}</span>
+                        <span class="option-sub">{s.sub}</span>
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <!-- Step 2: Industry -->
+        <template if:true={isStep2}>
+            <h2 class="quiz-title">What industry are you in?</h2>
+            <p class="quiz-sub">Choose the closest match.</p>
+            <div class="options-grid">
+                <template for:each={industries} for:item="ind">
+                    <button key={ind} data-value={ind} data-field="industry" onclick={handleSelect} class="option-btn-sm">
+                        {ind}
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <!-- Step 3: County -->
+        <template if:true={isStep3}>
+            <h2 class="quiz-title">Which county are you in?</h2>
+            <p class="quiz-sub">Resources vary by location across Utah.</p>
+            <div class="options-grid-3">
+                <template for:each={counties} for:item="c">
+                    <button key={c} data-value={c} data-field="county" onclick={handleSelect} class="option-btn-sm">
+                        {c}
+                    </button>
+                </template>
+            </div>
+        </template>
+
+        <!-- Step 4: Community -->
+        <template if:true={isStep4}>
+            <h2 class="quiz-title">Do you belong to any of these communities?</h2>
+            <p class="quiz-sub">Some resources are specifically designed for these groups.</p>
+            <div class="options-list">
+                <template for:each={communities} for:item="c">
+                    <button key={c.value} data-value={c.value} data-field="community" onclick={handleSelect} class="option-btn">
+                        {c.label}
+                    </button>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

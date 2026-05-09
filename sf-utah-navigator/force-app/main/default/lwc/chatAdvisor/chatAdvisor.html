@@ -1,0 +1,31 @@
+<template>
+    <div class="chat-container">
+        <div class="messages" lwc:ref="messageList">
+            <template for:each={messages} for:item="m">
+                <div key={m.id} class={m.wrapCls}>
+                    <div class={m.bubbleCls}>{m.content}</div>
+                </div>
+            </template>
+            <template if:true={loading}>
+                <div class="msg-wrap assistant">
+                    <div class="bubble assistant typing">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </template>
+        </div>
+        <div class="input-row">
+            <input
+                type="text"
+                class="chat-input"
+                placeholder="Ask about funding, mentorship, workspace…"
+                value={inputValue}
+                onchange={handleInput}
+                onkeydown={handleKeyDown}
+            />
+            <button class="send-btn" onclick={send} disabled={isSendDisabled}>Send</button>
+        </div>
+    </div>
+</template>

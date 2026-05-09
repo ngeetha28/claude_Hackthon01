@@ -1,0 +1,76 @@
+<template>
+    <!-- Header -->
+    <div class="site-header">
+        <div class="header-inner">
+            <div class="brand">
+                <div class="brand-icon">U</div>
+                <div>
+                    <div class="brand-name">Utah Founder&apos;s Navigator</div>
+                    <div class="brand-sub">Governor&apos;s Office of Economic Opportunity</div>
+                </div>
+            </div>
+            <template if:true={profile}>
+                <div class="profile-info">
+                    <span class="profile-stage">{stageLabel}</span>
+                    <span class="profile-detail">{profile.industry} · {profile.county} County</span>
+                    <button class="reset-btn" onclick={reset}>Start Over</button>
+                </div>
+            </template>
+        </div>
+    </div>
+
+    <!-- Quiz state -->
+    <template if:false={profile}>
+        <div class="landing-hero">
+            <h1 class="hero-title">Find the right resources.<br/><span class="hero-accent">In under 2 minutes.</span></h1>
+            <p class="hero-sub">Answer 4 quick questions and we&apos;ll match you with Utah state resources that fit your business — not every founder&apos;s.</p>
+        </div>
+        <c-founder-quiz oncomplete={handleQuizComplete}></c-founder-quiz>
+    </template>
+
+    <!-- Dashboard state -->
+    <template if:true={profile}>
+        <div class="stats-bar">
+            <span class="stats-count">{resources.length} resources matched</span>
+            <span class="stats-sep">·</span>
+            <span class="stats-label">Personalized for your profile</span>
+        </div>
+
+        <div class="dashboard-body">
+            <!-- Tab switcher -->
+            <div class="tab-row">
+                <button class={tabResourcesCls} onclick={showResources}>Resources ({resources.length})</button>
+                <button class={tabChatCls} onclick={showChat}>AI Advisor</button>
+            </div>
+
+            <!-- Resources tab -->
+            <template if:true={isResourcesTab}>
+                <div class="filter-row">
+                    <input type="text" class="search-input" placeholder="Search resources…" value={searchQuery} onchange={handleSearch} />
+                    <div class="topic-filters">
+                        <template for:each={topicsWithCls} for:item="t">
+                            <button key={t.label} data-topic={t.label} onclick={handleTopicFilter} class={t.cls}>{t.label}</button>
+                        </template>
+                    </div>
+                </div>
+                <template if:true={isLoading}>
+                    <div class="loading-text">Loading resources…</div>
+                </template>
+                <template if:false={isLoading}>
+                    <div class="resource-grid">
+                        <template for:each={filteredResources} for:item="r">
+                            <c-resource-card key={r.Id} resource={r}></c-resource-card>
+                        </template>
+                    </div>
+                </template>
+            </template>
+
+            <!-- Chat tab -->
+            <template if:true={isChatTab}>
+                <div class="chat-wrapper">
+                    <c-chat-advisor profile={profile} resources={resources}></c-chat-advisor>
+                </div>
+            </template>
+        </div>
+    </template>
+</template>
