@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git init *)",
+      "Bash(gh repo *)",
+      "WebFetch(domain:startupstate.netlify.app)",
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:startup.utah.gov)",
+      "Bash(npx create-next-app@14 *)",
+      "Bash(brew install *)",
+      "Bash(cp -r /tmp/founders-navigator/. /Users/geethanatarajan/claudecode/hackathon/)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "Bash(export PATH=\"/opt/homebrew/opt/node@22/bin:$PATH\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(node -e ' *)",
+      "Bash(curl -s -X POST http://localhost:3000/api/chat -H 'Content-Type: application/json' -d '{ *)",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl *)"
+    ]
+  }
+}
