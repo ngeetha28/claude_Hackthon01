@@ -26,11 +26,17 @@ public with sharing class ChatController {
             'messages'   => apiMessages
         };
 
+        AnthropicSettings__mdt settings = [
+            SELECT ApiKey__c FROM AnthropicSettings__mdt
+            WHERE DeveloperName = 'Default' LIMIT 1
+        ];
+
         HttpRequest req = new HttpRequest();
-        req.setEndpoint('callout:Anthropic_API/v1/messages');
+        req.setEndpoint('https://api.anthropic.com/v1/messages');
         req.setMethod('POST');
         req.setHeader('Content-Type', 'application/json');
         req.setHeader('anthropic-version', '2023-06-01');
+        req.setHeader('x-api-key', settings.ApiKey__c);
         req.setBody(JSON.serialize(requestBody));
         req.setTimeout(30000);
 
