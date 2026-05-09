@@ -1,0 +1,17 @@
+{
+  "id": "home",
+  "label": "Home",
+  "urlScheme": "none",
+  "urlPathTemplate": "",
+  "isDefault": true,
+  "isAvailableToGuests": true,
+  "routeType": "home",
+  "page": {
+    "id": "home",
+    "label": "Home",
+    "type": "standard__namedPage",
+    "attributes": {
+      "pageName": "home"
+    }
+  }
+}

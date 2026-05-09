@@ -1,0 +1,78 @@
+.company-card {
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.2s;
+    margin-bottom: 12px;
+}
+.company-card:hover { box-shadow: 0 4px 16px rgba(0,38,84,0.12); transform: translateY(-1px); }
+.card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+}
+.company-initial {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #002654, #C8102E);
+    color: #fff;
+    font-size: 20px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.card-title-area { flex: 1; min-width: 0; }
+.company-name {
+    margin: 0 0 6px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #002654;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.badges { display: flex; gap: 6px; flex-wrap: wrap; }
+.badge {
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+.badge-stage { background: #e8eef6; color: #002654; }
+.badge-sector { background: #fef2f2; color: #991b1b; }
+.badge-hiring { background: #dcfce7; color: #166534; }
+.card-body { padding: 0 16px 16px; border-top: 1px solid #f0f0f0; }
+.description {
+    font-size: 13px;
+    color: #444;
+    line-height: 1.5;
+    margin: 12px 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.detail-grid { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.detail-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #666; }
+.detail-icon { font-size: 14px; }
+.card-links { display: flex; gap: 8px; flex-wrap: wrap; }
+.link-btn {
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    background: #002654;
+    color: #fff;
+    transition: background 0.2s;
+}
+.link-btn:hover { background: #001a3a; }
+.link-linkedin { background: #0077b5; }
+.link-linkedin:hover { background: #005f91; }
+.air-quality-section { margin-top: 12px; }

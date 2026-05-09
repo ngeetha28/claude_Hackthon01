@@ -1,0 +1,61 @@
+<template>
+    <div class="company-card" onclick={handleCardClick}>
+        <div class="card-header">
+            <div class="company-initial">{initial}</div>
+            <div class="card-title-area">
+                <h3 class="company-name">{company.Name}</h3>
+                <div class="badges">
+                    <template if:true={company.Stage__c}>
+                        <span class="badge badge-stage">{company.Stage__c}</span>
+                    </template>
+                    <template if:true={company.Sector__c}>
+                        <span class="badge badge-sector">{company.Sector__c}</span>
+                    </template>
+                    <template if:true={isHiring}>
+                        <span class="badge badge-hiring">Hiring</span>
+                    </template>
+                </div>
+            </div>
+        </div>
+        <template if:true={expanded}>
+            <div class="card-body" onclick={stopProp}>
+                <template if:true={company.Description__c}>
+                    <p class="description">{company.Description__c}</p>
+                </template>
+                <div class="detail-grid">
+                    <template if:true={company.City__c}>
+                        <div class="detail-item">
+                            <span class="detail-icon">📍</span>
+                            <span>{company.City__c}, {company.County__c} County</span>
+                        </div>
+                    </template>
+                    <template if:true={company.EmployeeCount__c}>
+                        <div class="detail-item">
+                            <span class="detail-icon">👥</span>
+                            <span>{company.EmployeeCount__c} employees</span>
+                        </div>
+                    </template>
+                    <template if:true={company.YearFounded__c}>
+                        <div class="detail-item">
+                            <span class="detail-icon">📅</span>
+                            <span>Founded {company.YearFounded__c}</span>
+                        </div>
+                    </template>
+                </div>
+                <div class="card-links">
+                    <template if:true={company.Website__c}>
+                        <a href={company.Website__c} target="_blank" class="link-btn" onclick={stopProp}>Website ↗</a>
+                    </template>
+                    <template if:true={company.LinkedIn__c}>
+                        <a href={company.LinkedIn__c} target="_blank" class="link-btn link-linkedin" onclick={stopProp}>LinkedIn ↗</a>
+                    </template>
+                </div>
+                <template if:true={showAirQuality}>
+                    <div class="air-quality-section">
+                        <c-air-quality-widget county-name={company.County__c}></c-air-quality-widget>
+                    </div>
+                </template>
+            </div>
+        </template>
+    </div>
+</template>

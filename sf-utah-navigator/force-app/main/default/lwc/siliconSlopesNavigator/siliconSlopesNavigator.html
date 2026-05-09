@@ -1,0 +1,146 @@
+<template>
+    <!-- Floating launcher -->
+    <template if:false={isOpen}>
+        <button class="launcher" onclick={openChat} aria-label="Open Silicon Slopes Navigator">
+            <div class="launcher-glow"></div>
+            <div class="launcher-inner">
+                <div class="launcher-mountains">
+                    <svg width="28" height="20" viewBox="0 0 28 20" fill="none">
+                        <polygon points="0,20 8,4 16,20" fill="rgba(255,255,255,0.5)"/>
+                        <polygon points="6,20 14,2 22,20" fill="rgba(255,255,255,0.85)"/>
+                        <polygon points="12,20 21,7 28,20" fill="rgba(255,255,255,0.55)"/>
+                    </svg>
+                </div>
+                <div class="launcher-text">
+                    <div class="launcher-title">Silicon Slopes Navigator</div>
+                    <div class="launcher-sub">Find Utah startup resources →</div>
+                </div>
+            </div>
+            <template if:true={unreadCount}>
+                <div class="launcher-badge">{unreadCount}</div>
+            </template>
+        </button>
+    </template>
+
+    <!-- Chat panel -->
+    <template if:true={isOpen}>
+        <div class="chat-panel" role="dialog" aria-label="Silicon Slopes Navigator">
+
+            <!-- Hero Header -->
+            <div class="panel-header">
+                <div class="header-mountains-bg">
+                    <svg viewBox="0 0 420 80" preserveAspectRatio="none">
+                        <polygon points="0,80 60,20 120,80"  fill="rgba(255,255,255,0.04)"/>
+                        <polygon points="40,80 110,10 180,80" fill="rgba(255,255,255,0.06)"/>
+                        <polygon points="100,80 175,25 250,80" fill="rgba(255,255,255,0.05)"/>
+                        <polygon points="160,80 230,15 300,80" fill="rgba(255,255,255,0.07)"/>
+                        <polygon points="240,80 310,30 380,80" fill="rgba(255,255,255,0.04)"/>
+                        <polygon points="320,80 390,18 440,80" fill="rgba(255,255,255,0.06)"/>
+                    </svg>
+                </div>
+                <div class="header-stars">
+                    <span class="star s1"></span><span class="star s2"></span>
+                    <span class="star s3"></span><span class="star s4"></span>
+                    <span class="star s5"></span>
+                </div>
+
+                <div class="header-content">
+                    <div class="header-top-row">
+                        <div class="brand-area">
+                            <div class="logo-mark">
+                                <svg width="36" height="26" viewBox="0 0 36 26" fill="none">
+                                    <polygon points="0,26 10,5 20,26"  fill="rgba(255,255,255,0.45)"/>
+                                    <polygon points="8,26 18,0 28,26"  fill="rgba(255,255,255,0.9)"/>
+                                    <polygon points="16,26 27,8 36,26" fill="rgba(255,255,255,0.55)"/>
+                                    <polygon points="18,0 14,10 22,10" fill="white"/>
+                                </svg>
+                            </div>
+                            <div class="brand-text">
+                                <div class="brand-name">Silicon Slopes</div>
+                                <div class="brand-tag">NAVIGATOR</div>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button class="header-btn" onclick={resetChat} title="Start over">↺</button>
+                            <button class="header-btn close-btn" onclick={closeChat} title="Close">✕</button>
+                        </div>
+                    </div>
+                    <div class="header-bottom-row">
+                        <div class="agent-status-row">
+                            <span class="status-dot"></span>
+                            <span class="status-text">AI Concierge · Utah Startup Ecosystem</span>
+                        </div>
+                        <div class="powered-pill">⚡ Claude AI</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages -->
+            <div class="messages-area">
+                <template for:each={messages} for:item="msg">
+                    <div key={msg.id} class={msg.wrapCls}>
+                        <template if:true={msg.isAgent}>
+                            <div class="msg-avatar-sm">
+                                <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                    <polygon points="0,10 4,2 8,10"  fill="rgba(27,79,138,0.5)"/>
+                                    <polygon points="3,10 7,0 11,10" fill="#1B4F8A"/>
+                                    <polygon points="6,10 10,3 14,10" fill="rgba(27,79,138,0.6)"/>
+                                </svg>
+                            </div>
+                        </template>
+                        <div class={msg.bubbleCls}>
+                            <div class="msg-content">{msg.content}</div>
+                            <div class="msg-time">{msg.time}</div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Typing indicator -->
+                <template if:true={isTyping}>
+                    <div class="msg-wrap agent">
+                        <div class="msg-avatar-sm">
+                            <svg width="14" height="10" viewBox="0 0 14 10" fill="none">
+                                <polygon points="0,10 4,2 8,10"  fill="rgba(27,79,138,0.5)"/>
+                                <polygon points="3,10 7,0 11,10" fill="#1B4F8A"/>
+                                <polygon points="6,10 10,3 14,10" fill="rgba(27,79,138,0.6)"/>
+                            </svg>
+                        </div>
+                        <div class="msg-bubble agent typing-bubble">
+                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Input area -->
+            <div class="input-area">
+                <textarea
+                    class="chat-input"
+                    placeholder="Tell me about your business…"
+                    value={inputText}
+                    oninput={handleInput}
+                    onkeydown={handleKeyDown}
+                    rows="1"
+                    disabled={isTyping}
+                ></textarea>
+                <button class="send-btn" onclick={sendMessage} disabled={sendDisabled}>
+                    <template if:true={isTyping}>
+                        <span class="send-spinner"></span>
+                    </template>
+                    <template if:false={isTyping}>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                            <path d="M22 2L11 13" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+                            <path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="white" stroke-width="2.5" stroke-linejoin="round"/>
+                        </svg>
+                    </template>
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="panel-footer">
+                <span class="footer-logo">🏔️</span>
+                Silicon Slopes · Utah GOED · Powered by Claude AI
+            </div>
+        </div>
+    </template>
+</template>

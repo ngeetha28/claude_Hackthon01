@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlugin xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Silicon Slopes Navigator — AI concierge for Utah entrepreneurs. Searches the Utah startup resource database and returns the most relevant grants, funding, mentoring, licensing, and training programs personalized to the founder&apos;s profile.</description>
+    <developerName>SiliconSlopesNavigator</developerName>
+    <language>en_US</language>
+    <masterLabel>Silicon Slopes Navigator</masterLabel>
+    <pluginType>Topic</pluginType>
+</GenAiPlugin>

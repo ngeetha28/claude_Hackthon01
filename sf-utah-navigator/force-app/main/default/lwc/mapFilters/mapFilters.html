@@ -1,0 +1,73 @@
+<template>
+    <div class="filters-container">
+        <div class="filters-row">
+            <div class="filter-group">
+                <label class="filter-label">Sector</label>
+                <select class="filter-select" data-field="sector" onchange={handleChange}>
+                    <option value="All">All Sectors</option>
+                    <option value="B2B Software">B2B Software</option>
+                    <option value="FinTech">FinTech</option>
+                    <option value="Bio/Medical Tech">Bio/Medical Tech</option>
+                    <option value="Consumer">Consumer</option>
+                    <option value="Security">Security</option>
+                    <option value="Energy">Energy</option>
+                    <option value="Marketplaces">Marketplaces</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Stage</label>
+                <select class="filter-select" data-field="stage" onchange={handleChange}>
+                    <option value="All">All Stages</option>
+                    <option value="Pre-Seed">Pre-Seed</option>
+                    <option value="Seed">Seed</option>
+                    <option value="Series A">Series A</option>
+                    <option value="Series B">Series B</option>
+                    <option value="Series C">Series C</option>
+                    <option value="Series D+">Series D+</option>
+                    <option value="Bootstrapped">Bootstrapped</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Size</label>
+                <select class="filter-select" data-field="employeeCount" onchange={handleChange}>
+                    <option value="All">All Sizes</option>
+                    <option value="2-10">2-10</option>
+                    <option value="11-50">11-50</option>
+                    <option value="51-200">51-200</option>
+                    <option value="201-500">201-500</option>
+                    <option value="501-1K">501-1K</option>
+                    <option value="1K-5K">1K-5K</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">County</label>
+                <select class="filter-select" data-field="county" onchange={handleChange}>
+                    <option value="All">All Counties</option>
+                    <option value="Salt Lake">Salt Lake</option>
+                    <option value="Utah">Utah</option>
+                    <option value="Davis">Davis</option>
+                    <option value="Weber">Weber</option>
+                    <option value="Washington">Washington</option>
+                    <option value="Cache">Cache</option>
+                    <option value="Summit">Summit</option>
+                    <option value="Tooele">Tooele</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label class="filter-label">Hiring</label>
+                <select class="filter-select" data-field="hiringStatus" onchange={handleChange}>
+                    <option value="All">All</option>
+                    <option value="Actively Hiring">Actively Hiring</option>
+                    <option value="Not Hiring">Not Hiring</option>
+                </select>
+            </div>
+            <button class="reset-btn" onclick={handleReset}>Reset</button>
+        </div>
+        <div class="result-count">
+            <template if:true={resultCount}>
+                <span>{resultCount} companies</span>
+            </template>
+        </div>
+    </div>
+</template>

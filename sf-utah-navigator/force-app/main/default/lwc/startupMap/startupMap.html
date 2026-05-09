@@ -1,0 +1,228 @@
+<template>
+    <div class="map-root">
+        <!-- Top filter bar -->
+        <div class="filter-bar">
+            <div class="filter-bar-inner">
+                <div class="filter-title">
+                    <span class="title-icon">🗺</span>
+                    <span>Utah Startup Map</span>
+                    <span class="company-count">{totalCount} companies</span>
+                </div>
+                <div class="filters">
+                    <div class="filter-pill">
+                        <label>Stage</label>
+                        <select data-field="stage" onchange={handleFilter}>
+                            <option value="All">All Stages</option>
+                            <option value="Pre-Seed">Pre-Seed</option>
+                            <option value="Seed">Seed</option>
+                            <option value="Series A">Series A</option>
+                            <option value="Series B">Series B</option>
+                            <option value="Series C">Series C</option>
+                            <option value="Series D+">Series D+</option>
+                            <option value="Bootstrapped">Bootstrapped</option>
+                        </select>
+                    </div>
+                    <div class="filter-pill">
+                        <label>Sector</label>
+                        <select data-field="sector" onchange={handleFilter}>
+                            <option value="All">All Sectors</option>
+                            <option value="B2B Software">B2B Software</option>
+                            <option value="FinTech">FinTech</option>
+                            <option value="Bio/Medical Tech">Bio/Medical Tech</option>
+                            <option value="Consumer">Consumer</option>
+                            <option value="Security">Security</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Marketplaces">Marketplaces</option>
+                        </select>
+                    </div>
+                    <div class="filter-pill">
+                        <label>Employees</label>
+                        <select data-field="employeeCount" onchange={handleFilter}>
+                            <option value="All">Any Size</option>
+                            <option value="2-10">2–10</option>
+                            <option value="11-50">11–50</option>
+                            <option value="51-200">51–200</option>
+                            <option value="201-500">201–500</option>
+                            <option value="501-1K">501–1K</option>
+                            <option value="1K-5K">1K–5K</option>
+                        </select>
+                    </div>
+                    <div class="filter-pill">
+                        <label>Location</label>
+                        <select data-field="county" onchange={handleFilter}>
+                            <option value="All">All Counties</option>
+                            <option value="Salt Lake">Salt Lake</option>
+                            <option value="Utah">Utah</option>
+                            <option value="Davis">Davis</option>
+                            <option value="Weber">Weber</option>
+                            <option value="Washington">Washington</option>
+                            <option value="Cache">Cache</option>
+                            <option value="Summit">Summit</option>
+                        </select>
+                    </div>
+                    <div class="search-wrap">
+                        <input type="text" placeholder="Search…" oninput={handleSearch} class="search-input" />
+                    </div>
+                </div>
+                <button class="add-company-btn" onclick={openClaimModal}>+ Add Your Company</button>
+            </div>
+        </div>
+
+        <!-- Main split layout -->
+        <div class="split-layout">
+            <!-- Left: company list -->
+            <div class="company-panel">
+                <template if:true={isLoading}>
+                    <div class="loading-state">
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                        <p>Loading Utah's startup ecosystem…</p>
+                    </div>
+                </template>
+                <template if:false={isLoading}>
+                    <template for:each={groupedSectors} for:item="sector">
+                        <div key={sector.name} class="sector-group">
+                            <div class="sector-header" onclick={handleSectorClick} data-sector={sector.name}>
+                                <span class="sector-dot" style={sector.dotStyle}></span>
+                                <span class="sector-name">{sector.name}</span>
+                                <span class="sector-count">{sector.count}</span>
+                            </div>
+                            <template if:true={sector.expanded}>
+                                <div class="sector-companies">
+                                    <template for:each={sector.companies} for:item="company">
+                                        <div key={company.Id} class={company.cardCls} onclick={handleCompanyClick} data-id={company.Id}>
+                                            <div class="co-initial">{company.initial}</div>
+                                            <div class="co-info">
+                                                <div class="co-name">{company.Name}</div>
+                                                <div class="co-desc">{company.Description__c}</div>
+                                                <div class="co-meta">
+                                                    <span class="co-badge stage">{company.Stage__c}</span>
+                                                    <span class="co-badge emp">{company.EmployeeCount__c}</span>
+                                                    <template if:true={company.City__c}>
+                                                        <span class="co-location">📍 {company.City__c}</span>
+                                                    </template>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </template>
+                        </div>
+                    </template>
+                    <template if:false={hasResults}>
+                        <div class="empty-state">
+                            <div class="empty-icon">🔍</div>
+                            <p>No companies match your filters.</p>
+                            <button onclick={resetFilters} class="reset-link">Clear filters</button>
+                        </div>
+                    </template>
+                </template>
+            </div>
+
+            <!-- Right: map -->
+            <div class="map-panel">
+                <div id="map" class="leaflet-map"></div>
+                <!-- Selected company detail panel -->
+                <template if:true={selectedCompany}>
+                    <div class="detail-panel">
+                        <button class="detail-close" onclick={closeDetail}>✕</button>
+                        <div class="detail-header">
+                            <div class="detail-initial">{selectedCompany.initial}</div>
+                            <div>
+                                <div class="detail-name">{selectedCompany.Name}</div>
+                                <div class="detail-badges">
+                                    <span class="co-badge stage">{selectedCompany.Stage__c}</span>
+                                    <span class="co-badge sector">{selectedCompany.Sector__c}</span>
+                                    <span class="co-badge emp">{selectedCompany.EmployeeCount__c} employees</span>
+                                    <template if:true={selectedCompany.isHiring}>
+                                        <span class="co-badge hiring">🟢 Hiring</span>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="detail-desc">{selectedCompany.Description__c}</p>
+                        <div class="detail-grid">
+                            <template if:true={selectedCompany.Address__c}>
+                                <div class="detail-row"><span>📍</span><span>{selectedCompany.Address__c}</span></div>
+                            </template>
+                            <template if:true={selectedCompany.County__c}>
+                                <div class="detail-row"><span>🗺</span><span>{selectedCompany.County__c} County</span></div>
+                            </template>
+                        </div>
+                        <div class="detail-links">
+                            <template if:true={selectedCompany.Website__c}>
+                                <a href={selectedCompany.Website__c} target="_blank" class="detail-btn">Website ↗</a>
+                            </template>
+                            <template if:true={selectedCompany.LinkedIn__c}>
+                                <a href={selectedCompany.LinkedIn__c} target="_blank" class="detail-btn linkedin">LinkedIn ↗</a>
+                            </template>
+                        </div>
+                        <div class="detail-aq">
+                            <c-air-quality-widget county={selectedCompany.County__c}></c-air-quality-widget>
+                        </div>
+                        <button class="claim-btn" onclick={openClaimModal}>✏️ Claim / Edit This Profile</button>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- Claim / Add Company Modal -->
+        <template if:true={showClaimModal}>
+            <div class="modal-backdrop" onclick={closeClaimModal}>
+                <div class="modal" onclick={stopProp}>
+                    <button class="modal-close" onclick={closeClaimModal}>✕</button>
+                    <h2 class="modal-title">
+                        <template if:true={claimingCompany}>Edit Your Company Profile</template>
+                        <template if:false={claimingCompany}>Add Your Company</template>
+                    </h2>
+                    <p class="modal-sub">Enter your work email to verify ownership. We'll send a one-time link.</p>
+                    <div class="modal-form">
+                        <label class="form-label">Company Name *</label>
+                        <input type="text" class="form-input" value={claimForm.name} data-field="name" onchange={handleClaimField} placeholder="Your company name" />
+                        <label class="form-label">Work Email *</label>
+                        <input type="email" class="form-input" value={claimForm.email} data-field="email" onchange={handleClaimField} placeholder="you@yourcompany.com" />
+                        <label class="form-label">Website</label>
+                        <input type="url" class="form-input" value={claimForm.website} data-field="website" onchange={handleClaimField} placeholder="https://yourcompany.com" />
+                        <label class="form-label">LinkedIn URL</label>
+                        <input type="url" class="form-input" value={claimForm.linkedin} data-field="linkedin" onchange={handleClaimField} placeholder="https://linkedin.com/company/..." />
+                        <label class="form-label">Description</label>
+                        <textarea class="form-textarea" data-field="description" onchange={handleClaimField} placeholder="One sentence about what you do…">{claimForm.description}</textarea>
+                        <label class="form-label">Address</label>
+                        <input type="text" class="form-input" value={claimForm.address} data-field="address" onchange={handleClaimField} placeholder="123 Main St, Salt Lake City, UT" />
+                        <label class="form-label">Stage</label>
+                        <select class="form-input" data-field="stage" onchange={handleClaimField}>
+                            <option value="">Select…</option>
+                            <option value="Pre-Seed">Pre-Seed</option>
+                            <option value="Seed">Seed</option>
+                            <option value="Series A">Series A</option>
+                            <option value="Series B">Series B</option>
+                            <option value="Series C">Series C</option>
+                            <option value="Series D+">Series D+</option>
+                            <option value="Bootstrapped">Bootstrapped</option>
+                        </select>
+                        <label class="form-label">Sector</label>
+                        <select class="form-input" data-field="sector" onchange={handleClaimField}>
+                            <option value="">Select…</option>
+                            <option value="B2B Software">B2B Software</option>
+                            <option value="FinTech">FinTech</option>
+                            <option value="Bio/Medical Tech">Bio/Medical Tech</option>
+                            <option value="Consumer">Consumer</option>
+                            <option value="Security">Security</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Marketplaces">Marketplaces</option>
+                        </select>
+                        <template if:true={claimError}>
+                            <p class="form-error">{claimError}</p>
+                        </template>
+                        <template if:true={claimSuccess}>
+                            <p class="form-success">✅ Verification email sent! Check your inbox.</p>
+                        </template>
+                        <button class="submit-btn" onclick={submitClaim} disabled={claimSubmitting}>
+                            <template if:true={claimSubmitting}>Sending…</template>
+                            <template if:false={claimSubmitting}>Send Verification Email</template>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</template>

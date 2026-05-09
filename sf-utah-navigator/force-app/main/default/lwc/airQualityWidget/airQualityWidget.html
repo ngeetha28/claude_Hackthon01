@@ -1,0 +1,33 @@
+<template>
+    <div class="aqi-widget">
+        <div class="aqi-header">
+            <span class="aqi-icon">🌬️</span>
+            <span class="aqi-title">Air Quality</span>
+            <template if:true={county}>
+                <span class="aqi-county">{county} County</span>
+            </template>
+        </div>
+        <template if:true={isLoading}>
+            <div class="aqi-loading">
+                <lightning-spinner alternative-text="Loading" size="small"></lightning-spinner>
+            </div>
+        </template>
+        <template if:false={isLoading}>
+            <template if:true={hasData}>
+                <div class={aqiCardClass}>
+                    <div class="aqi-value">{aqiValue}</div>
+                    <div class="aqi-label">AQI</div>
+                    <div class="aqi-category">{category}</div>
+                    <template if:true={pollutant}>
+                        <div class="aqi-pollutant">Primary: {pollutant}</div>
+                    </template>
+                </div>
+            </template>
+            <template if:false={hasData}>
+                <div class="aqi-unavailable">
+                    <span>Air quality data unavailable</span>
+                </div>
+            </template>
+        </template>
+    </div>
+</template>

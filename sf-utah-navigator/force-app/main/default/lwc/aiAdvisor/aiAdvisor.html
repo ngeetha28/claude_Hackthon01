@@ -1,0 +1,131 @@
+<template>
+    <div class="advisor-root">
+        <!-- Left: context panel -->
+        <div class="context-panel">
+            <div class="context-header">
+                <div class="ai-avatar">🤖</div>
+                <div>
+                    <div class="ai-name">Utah Startup Advisor</div>
+                    <div class="ai-sub">Powered by Claude AI</div>
+                </div>
+            </div>
+            <div class="context-section">
+                <div class="context-label">Your Profile</div>
+                <div class="profile-grid">
+                    <div class="profile-row">
+                        <label>Stage</label>
+                        <select data-field="stage" onchange={handleProfile}>
+                            <option value="">Any</option>
+                            <option value="Pre-Seed">Pre-Seed</option>
+                            <option value="Seed">Seed</option>
+                            <option value="Series A">Series A</option>
+                            <option value="Series B">Series B</option>
+                            <option value="Series C">Series C</option>
+                            <option value="Bootstrapped">Bootstrapped</option>
+                        </select>
+                    </div>
+                    <div class="profile-row">
+                        <label>Industry</label>
+                        <select data-field="industry" onchange={handleProfile}>
+                            <option value="">Any</option>
+                            <option value="B2B Software">B2B Software</option>
+                            <option value="FinTech">FinTech</option>
+                            <option value="Bio/Medical Tech">Bio/Medical Tech</option>
+                            <option value="Consumer">Consumer</option>
+                            <option value="Security">Security</option>
+                            <option value="Energy">Energy</option>
+                            <option value="Marketplaces">Marketplaces</option>
+                        </select>
+                    </div>
+                    <div class="profile-row">
+                        <label>County</label>
+                        <select data-field="county" onchange={handleProfile}>
+                            <option value="">Any</option>
+                            <option value="Salt Lake">Salt Lake</option>
+                            <option value="Utah">Utah County</option>
+                            <option value="Davis">Davis</option>
+                            <option value="Weber">Weber</option>
+                            <option value="Washington">Washington</option>
+                            <option value="Cache">Cache</option>
+                            <option value="Summit">Summit</option>
+                        </select>
+                    </div>
+                    <div class="profile-row">
+                        <label>Community</label>
+                        <select data-field="community" onchange={handleProfile}>
+                            <option value="">Any</option>
+                            <option value="Women">Women Founders</option>
+                            <option value="Minority">Minority Founders</option>
+                            <option value="Veteran">Veteran Founders</option>
+                            <option value="Rural">Rural Founders</option>
+                            <option value="International">International Founders</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="context-section">
+                <div class="context-label">Suggested Questions</div>
+                <div class="suggestions">
+                    <template for:each={suggestions} for:item="s">
+                        <button key={s} class="suggestion-btn" data-q={s} onclick={useSuggestion}>{s}</button>
+                    </template>
+                </div>
+            </div>
+            <div class="context-section">
+                <div class="context-label">About</div>
+                <p class="about-text">Your AI advisor knows all Utah state resources, funding programs, and support organizations. Ask anything about starting or growing your business in Utah.</p>
+            </div>
+        </div>
+
+        <!-- Right: chat -->
+        <div class="chat-panel">
+            <div class="messages-container" lwc:ref="messagesContainer">
+                <!-- Welcome message -->
+                <template if:false={hasMessages}>
+                    <div class="welcome-state">
+                        <div class="welcome-icon">🏔️</div>
+                        <h2 class="welcome-title">How can I help your Utah startup?</h2>
+                        <p class="welcome-sub">Ask me about funding, legal resources, networking, hiring, or anything else for Utah founders.</p>
+                    </div>
+                </template>
+                <!-- Messages -->
+                <template for:each={messages} for:item="msg">
+                    <div key={msg.id} class={msg.wrapCls}>
+                        <template if:true={msg.isAssistant}>
+                            <div class="msg-avatar">🤖</div>
+                        </template>
+                        <div class={msg.bubbleCls}>
+                            <div class="msg-text">{msg.content}</div>
+                            <div class="msg-time">{msg.time}</div>
+                        </div>
+                    </div>
+                </template>
+                <!-- Typing indicator -->
+                <template if:true={isTyping}>
+                    <div class="msg-wrap assistant">
+                        <div class="msg-avatar">🤖</div>
+                        <div class="msg-bubble assistant typing">
+                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Input row -->
+            <div class="input-row">
+                <textarea
+                    class="chat-input"
+                    placeholder="Ask about Utah resources, funding, legal help…"
+                    value={inputText}
+                    onkeydown={handleKeyDown}
+                    oninput={handleInput}
+                    rows="1"
+                ></textarea>
+                <button class="send-btn" onclick={sendMessage} disabled={isSending}>
+                    <template if:true={isSending}>⏳</template>
+                    <template if:false={isSending}>➤</template>
+                </button>
+            </div>
+        </div>
+    </div>
+</template>

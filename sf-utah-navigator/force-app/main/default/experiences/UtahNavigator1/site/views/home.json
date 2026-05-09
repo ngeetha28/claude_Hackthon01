@@ -1,0 +1,18 @@
+{
+  "id": "home",
+  "label": "Home",
+  "type": "home",
+  "variant": "standard",
+  "regions": {
+    "main": {
+      "components": [
+        {
+          "id": "resourceDashboard",
+          "type": "component",
+          "component": "c/resourceDashboard",
+          "attributes": {}
+        }
+      ]
+    }
+  }
+}

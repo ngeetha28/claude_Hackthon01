@@ -1,0 +1,104 @@
+<template>
+    <!-- Floating launcher bubble -->
+    <template if:false={isOpen}>
+        <button class="launcher" onclick={openChat} aria-label="Open Founder's Navigator">
+            <div class="launcher-icon">🧭</div>
+            <div class="launcher-label">
+                <div class="launcher-title">Founder&apos;s Navigator</div>
+                <div class="launcher-sub">Find your resources →</div>
+            </div>
+            <template if:true={unreadCount}>
+                <div class="launcher-badge">{unreadCount}</div>
+            </template>
+        </button>
+    </template>
+
+    <!-- Chat panel -->
+    <template if:true={isOpen}>
+        <div class="chat-panel" role="dialog" aria-label="Founder's Navigator AI Agent">
+            <!-- Header -->
+            <div class="panel-header">
+                <div class="header-left">
+                    <div class="agent-avatar">🧭</div>
+                    <div class="agent-info">
+                        <div class="agent-name">Founder&apos;s Navigator</div>
+                        <div class="agent-status">
+                            <span class="status-dot"></span>
+                            <span>AI Concierge · Utah Resources</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="header-btn" onclick={resetChat} title="Start over">↺</button>
+                    <button class="header-btn" onclick={closeChat} title="Close">✕</button>
+                </div>
+            </div>
+
+            <!-- Progress bar (during onboarding) -->
+            <template if:true={showProgress}>
+                <div class="progress-bar">
+                    <div class="progress-fill" style={progressStyle}></div>
+                </div>
+                <div class="progress-label">Step {currentStep} of 4 — personalizing your results</div>
+            </template>
+
+            <!-- Messages -->
+            <div class="messages-area" lwc:ref="messagesArea">
+                <template for:each={messages} for:item="msg">
+                    <div key={msg.id} class={msg.wrapCls}>
+                        <template if:true={msg.isAgent}>
+                            <div class="msg-avatar-sm">🧭</div>
+                        </template>
+                        <div class={msg.bubbleCls}>
+                            <div class="msg-content">{msg.content}</div>
+                            <div class="msg-time">{msg.time}</div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Quick reply chips (shown during onboarding steps) -->
+                <template if:true={showQuickReplies}>
+                    <div class="quick-replies">
+                        <template for:each={quickReplies} for:item="qr">
+                            <button key={qr} class="qr-chip" data-reply={qr} onclick={useQuickReply}>{qr}</button>
+                        </template>
+                    </div>
+                </template>
+
+                <!-- Typing indicator -->
+                <template if:true={isTyping}>
+                    <div class="msg-wrap agent">
+                        <div class="msg-avatar-sm">🧭</div>
+                        <div class="msg-bubble agent typing-bubble">
+                            <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+                        </div>
+                    </div>
+                </template>
+            </div>
+
+            <!-- Input area -->
+            <div class="input-area">
+                <textarea
+                    class="chat-input"
+                    placeholder="Type a message or choose above…"
+                    value={inputText}
+                    oninput={handleInput}
+                    onkeydown={handleKeyDown}
+                    rows="1"
+                    disabled={inputDisabled}
+                ></textarea>
+                <button class="send-btn" onclick={sendMessage} disabled={sendDisabled}>
+                    <template if:true={isTyping}>
+                        <span class="send-spinner"></span>
+                    </template>
+                    <template if:false={isTyping}>➤</template>
+                </button>
+            </div>
+
+            <!-- Footer -->
+            <div class="panel-footer">
+                Powered by Claude AI · Utah GOED
+            </div>
+        </div>
+    </template>
+</template>

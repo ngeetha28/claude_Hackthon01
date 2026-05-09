@@ -1,0 +1,17 @@
+{
+  "id": "startupMap",
+  "label": "Startup Map",
+  "urlScheme": "none",
+  "urlPathTemplate": "startup-map",
+  "isDefault": false,
+  "isAvailableToGuests": true,
+  "routeType": "custom",
+  "page": {
+    "id": "startupMap",
+    "label": "Startup Map",
+    "type": "standard__namedPage",
+    "attributes": {
+      "pageName": "startupMap"
+    }
+  }
+}

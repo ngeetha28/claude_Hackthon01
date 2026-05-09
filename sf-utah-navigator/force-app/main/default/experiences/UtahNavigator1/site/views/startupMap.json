@@ -1,0 +1,18 @@
+{
+  "id": "startupMap",
+  "label": "Startup Map",
+  "type": "custom",
+  "variant": "standard",
+  "regions": {
+    "main": {
+      "components": [
+        {
+          "id": "startupMap",
+          "type": "component",
+          "component": "c/startupMap",
+          "attributes": {}
+        }
+      ]
+    }
+  }
+}

@@ -1,24 +1,4 @@
 <template>
-    <!-- Header -->
-    <div class="site-header">
-        <div class="header-inner">
-            <div class="brand">
-                <div class="brand-icon">U</div>
-                <div>
-                    <div class="brand-name">Utah Founder&apos;s Navigator</div>
-                    <div class="brand-sub">Governor&apos;s Office of Economic Opportunity</div>
-                </div>
-            </div>
-            <template if:true={profile}>
-                <div class="profile-info">
-                    <span class="profile-stage">{stageLabel}</span>
-                    <span class="profile-detail">{profile.industry} · {profile.county} County</span>
-                    <button class="reset-btn" onclick={reset}>Start Over</button>
-                </div>
-            </template>
-        </div>
-    </div>
-
     <!-- Quiz state -->
     <template if:false={profile}>
         <div class="landing-hero">

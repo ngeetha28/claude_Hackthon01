@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<NavigationMenu xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>GOED Mobile Nav</label>
+    <navigationMenuItem>
+        <label>Companies</label>
+        <position>1</position>
+        <publiclyAvailable>false</publiclyAvailable>
+        <target>Company__c</target>
+        <type>SalesforceObject</type>
+    </navigationMenuItem>
+    <navigationMenuItem>
+        <label>Resources</label>
+        <position>2</position>
+        <publiclyAvailable>false</publiclyAvailable>
+        <target>Resource__c</target>
+        <type>SalesforceObject</type>
+    </navigationMenuItem>
+    <navigationMenuItem>
+        <label>Utah Navigator Site</label>
+        <position>3</position>
+        <publiclyAvailable>false</publiclyAvailable>
+        <target>https://orgfarm-7c9a8e41f9-dev-ed.develop.my.site.com/utahnavigator</target>
+        <type>ExternalLink</type>
+    </navigationMenuItem>
+</NavigationMenu>
